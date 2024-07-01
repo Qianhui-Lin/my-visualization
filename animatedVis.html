@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herpes Zoster Vaccine Benefit and Risk Visualization</title>
+    <style>
+        .header {
+            background-color: #1E73BE;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .subheader {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Only center horizontally */
+            height: 100%;
+            width: 100%;
+        }
+        .icon-array {
+            display: grid;
+            grid-template-columns: repeat(40,5px);
+            gap: 1px;
+            margin: 10px;
+            align-items: center;
+            padding-left: 20px;
+        }
+        .dot {
+            width: 5px;
+            height: 5px;
+            margin: 1px;
+            background-color: lightgray;
+            border-radius: 50%;
+        }
+        .red { background-color: #b02418; }
+        .blue { background-color: #4e13e6; }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 5px;
+            flex-wrap: wrap;
+        }
+        .group {
+            text-align: center;
+            justify-content: center;
+            min-width: 300px;
+        }
+        .question {
+            text-align: left;
+            width: 300px;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .button-container .centered-button {
+            flex: 1 ; 
+            
+            padding: 10px 10px;
+            
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+            border-radius: 5px;
+            
+        }
+        #stimulate,#stimulate-10 {
+            background-color: #4CAF50;
+        }
+        #reset {
+            background-color: #1E73BE;
+        }
+
+        #stimulate:hover,#stimulate-10:hover, #stimulate-10:disabled{
+            background-color:#7fd483;
+        }
+
+
+        #reset:hover{
+            background-color:#64a6e0;
+        }
+        #effectiveness {
+            text-align: center;
+            color: #b02418;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        #safety {
+            text-align: center;
+            color: #4e13e6;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        #stats {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #avg-vaccinated-herpes,#avg-placebo-herpes,#avg-nnt{
+            color: #b02418;
+            font-weight: bold;
+        }
+        #avg-vaccinated-adverse,#avg-placebo-adverse{
+            color:#4e13e6;
+            font-weight: bold;
+        }
+        #stimulations{
+            font-weight: bold;
+        }
+        .cases {
+            font-size: 14px;
+        }
+        .cases .number {
+            font-weight: bold;
+        }
+        .cases .effectiveness {
+            color: #b02418;
+        }
+        .cases .safety {
+            color: #4e13e6;
+        }
+        .cases .label {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<h1 id="header">How Effective and Safe is the Herpes Zoster Vaccine ?</h1>
+<h2 id="subheader">For 1000 people ≥ 60 years old over an average period of 3.1 years</h2>
+<div class="wrapper">
+<div class="container">
+    <div id="effectiveness">
+        <p>1. Effectiveness</p>
+    </div>
+    <div class="row">
+        <div class="group">
+            <div class="question">How many vaccinated people will get herpes zoster?</div>
+            <div class="icon-array" id="vaccinated-herpes"></div>
+            <div class="cases">
+                <span class="number effectiveness" id="vaccinated-herpes-cases">0</span> <span class="label">cases</span>
+            </div>
+            <p>Vaccine Group</p>
+        </div>
+        <div class="group">
+            <div class="question">How many people in the placebo group will get herpes zoster?</div>
+            <div class="icon-array" id="placebo-herpes"></div>
+            <div class="cases">
+                <span class="number effectiveness" id="placebo-herpes-cases">0</span> <span class="label">cases</span>
+            </div>
+            <p>Placebo Group</p>
+        </div>
+    </div>
+    <div id="safety">
+        <p>2. Safety</p>
+    </div>
+    <div class="row">
+        <div class="group">
+            <div class="question">How many vaccinated people will have a serious adverse effect?</div>
+            <div class="icon-array" id="vaccinated-adverse"></div>
+            <div class="cases">
+                <span class="number safety" id="vaccinated-adverse-cases">0</span> <span class="label">cases</span>
+            </div>
+            <p>Vaccine Group</p>
+        </div>
+        <div class="group">
+            <div class="question">How many people in the placebo group will have a serious adverse effect?</div>
+            <div class="icon-array" id="placebo-adverse"></div>
+            <div class="cases">
+                <span class="number safety" id="placebo-adverse-cases">0</span> <span class="label">cases</span>
+            </div>
+            <p>Placebo Group</p>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button class="centered-button" id="stimulate">Simulate once</button>
+        <button class="centered-button" id="stimulate-10">Simulate 10 times</button>
+        <button class="centered-button" id="reset">Reset</button>
+    </div>
+
+</div>
+</div>
+
+
+<div id="stats">
+    <p>Simulation times: <span id="stimulations">0</span></p>
+    <p>Average number of herpes zoster cases in the vaccine group: <span id="avg-vaccinated-herpes">0</span></p>
+    <p>Average number of serious adverse effect cases in the vaccine group: <span id="avg-vaccinated-adverse">0</span></p>
+    <p>For every 1000 people, vaccination reduced an average of <span id="avg-nnt">0</span> cases compared to the placebo group.</p>
+    <p>Average number of herpes zoster cases in the placebo group: <span id="avg-placebo-herpes">0</span></p>
+    <p>Average number of serious adverse effect cases in the placebo group: <span id="avg-placebo-adverse">0</span></p>
+</div>
+
+<script>
+    const header = document.getElementById('header');
+    header.classList.add('header');
+
+    
+    const subheader = document.getElementById('subheader');
+    subheader.classList.add('subheader');
+
+    const vaccinatedHerpesArray = document.getElementById('vaccinated-herpes');
+    const placeboHerpesArray = document.getElementById('placebo-herpes');
+    const vaccinatedAdverseArray = document.getElementById('vaccinated-adverse');
+    const placeboAdverseArray = document.getElementById('placebo-adverse');
+    const stimulateButton = document.getElementById('stimulate');
+    const stimulationsSpan = document.getElementById('stimulations');
+    const avgVaccinatedHerpesSpan = document.getElementById('avg-vaccinated-herpes');
+    const avgVaccinatedAdverseSpan = document.getElementById('avg-vaccinated-adverse');
+    const avgPlaceboHerpesSpan = document.getElementById('avg-placebo-herpes');
+    const avgPlaceboAdverseSpan = document.getElementById('avg-placebo-adverse');
+    const avgNntSpan = document.getElementById('avg-nnt');
+    const vaccinatedHerpesCasesSpan = document.getElementById('vaccinated-herpes-cases');
+    const placeboHerpesCasesSpan = document.getElementById('placebo-herpes-cases');
+    const vaccinatedAdverseCasesSpan = document.getElementById('vaccinated-adverse-cases');
+    const placeboAdverseCasesSpan = document.getElementById('placebo-adverse-cases');
+
+    const stimulate10Button = document.getElementById('stimulate-10');
+    const resetButton = document.getElementById('reset');
+
+
+    let stimulations = 0;
+    let totalVaccinatedHerpes = 0;
+    let totalVaccinatedAdverse = 0;
+    let totalPlaceboHerpes = 0;
+    let totalPlaceboAdverse = 0;
+
+    function createDots(container) {
+        for (let i = 0; i < 1000; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            container.appendChild(dot);
+        }
+    }
+
+    function resetDots() {
+        document.querySelectorAll('.dot').forEach(dot => {
+            dot.classList.remove('red', 'blue');
+        });
+    }
+
+    function stimulate() {
+        resetDots();
+
+        const vaccinatedHerpesProbability = Math.random() * (19 - 14) / 1000 + 14 / 1000;
+        const vaccinatedAdverseProbability = Math.random() * (26 - 21) / 1000 + 21 / 1000;
+        const placeboHerpesProbability = 33 / 1000;
+        const placeboAdverseProbability = 22 / 1000;
+
+        const vaccinatedHerpesCases = Array.from(vaccinatedHerpesArray.children).reduce((count, dot) => {
+            if (Math.random() < vaccinatedHerpesProbability) {
+                dot.classList.add('red');
+                return count + 1;
+            }
+            return count;
+        }, 0);
+
+        const vaccinatedAdverseCases = Array.from(vaccinatedAdverseArray.children).reduce((count, dot) => {
+            if (Math.random() < vaccinatedAdverseProbability) {
+                dot.classList.add('blue');
+                return count + 1;
+            }
+            return count;
+        }, 0);
+
+        const placeboHerpesCases = Array.from(placeboHerpesArray.children).reduce((count, dot) => {
+            if (Math.random() < placeboHerpesProbability) {
+                dot.classList.add('red');
+                return count + 1;
+            }
+            return count;
+        }, 0);
+
+        const placeboAdverseCases = Array.from(placeboAdverseArray.children).reduce((count, dot) => {
+            if (Math.random() < placeboAdverseProbability) {
+                dot.classList.add('blue');
+                return count + 1;
+            }
+            return count;
+        }, 0);
+
+        stimulations++;
+        totalVaccinatedHerpes += vaccinatedHerpesCases;
+        totalVaccinatedAdverse += vaccinatedAdverseCases;
+        totalPlaceboHerpes += placeboHerpesCases;
+        totalPlaceboAdverse += placeboAdverseCases;
+
+        stimulationsSpan.textContent = stimulations;
+        avgVaccinatedHerpesSpan.textContent = (totalVaccinatedHerpes / stimulations).toFixed(2);
+        avgVaccinatedAdverseSpan.textContent = (totalVaccinatedAdverse / stimulations).toFixed(2);
+        avgPlaceboHerpesSpan.textContent = (totalPlaceboHerpes / stimulations).toFixed(2);
+        avgPlaceboAdverseSpan.textContent = (totalPlaceboAdverse / stimulations).toFixed(2);
+        avgNntSpan.textContent = ((totalPlaceboHerpes / stimulations).toFixed(2)-(totalVaccinatedHerpes / stimulations).toFixed(2)).toFixed(2)
+
+        vaccinatedHerpesCasesSpan.textContent = vaccinatedHerpesCases;
+        vaccinatedAdverseCasesSpan.textContent = vaccinatedAdverseCases;
+        placeboHerpesCasesSpan.textContent = placeboHerpesCases;
+        placeboAdverseCasesSpan.textContent = placeboAdverseCases;
+    }
+
+    function stimulateMultipleTimes(times) {
+        let count = 0;
+        const button = document.getElementById('stimulate-10');
+        button.disabled = true;
+        const interval = setInterval(() => {
+            if (count < times) {
+                stimulate();
+                count++;
+            } else {
+                clearInterval(interval);
+                button.disabled = false;
+            }
+        }, 1000);
+    }
+
+
+    createDots(vaccinatedHerpesArray);
+    createDots(placeboHerpesArray);
+    createDots(vaccinatedAdverseArray);
+    createDots(placeboAdverseArray);
+
+    stimulateButton.addEventListener('click', stimulate);
+    stimulate10Button.addEventListener('click', () => stimulateMultipleTimes(10));
+    resetButton.addEventListener('click', () => location.reload());
+</script>
+
+</body>
+</html>
+
